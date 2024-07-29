@@ -1,0 +1,15 @@
+# docker build -f src/main/docker/Dockerfile.customdistroless -t tanquetav/quarkusvault .
+FROM distromini21
+ENV LANGUAGE='en_US:en'
+
+
+# We make four distinct layers so if there are application changes the library layers can be re-used
+COPY --chown=185 target/quarkus-app/lib/ /home/nonroot/lib/
+COPY --chown=185 target/quarkus-app/*.jar /home/nonroot/
+COPY --chown=185 target/quarkus-app/app/ /home/nonroot/app/
+COPY --chown=185 target/quarkus-app/quarkus/ /home/nonroot/quarkus/
+
+EXPOSE 8080
+
+CMD [ "quarkus-run.jar" ]
+

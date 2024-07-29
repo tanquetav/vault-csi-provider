@@ -1,0 +1,14 @@
+# docker build -f src/main/docker/Dockerfile.jlink -t distromini21 .
+FROM azul/zulu-openjdk:21-latest as base
+RUN ["/usr/lib/jvm/zulu21/bin/jlink","--add-modules" \
+   ,"java.base,java.logging,java.naming,jdk.zipfs,jdk.unsupported,java.rmi,java.sql,java.security.jgss,java.management","--output","/tmp/jdk-base"]
+
+
+FROM gcr.io/distroless/java-base-debian11:debug-nonroot
+COPY --from=base /tmp/jdk-base /usr/java
+ENV JAVA_HOME /usr/java
+ENV PATH $PATH:/usr/java/bin
+USER 65532
+WORKDIR /home/nonroot
+ENTRYPOINT ["/usr/java/bin/java", "-jar"]
+

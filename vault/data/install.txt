@@ -1,0 +1,12 @@
+helm install my-release oci://registry-1.docker.io/bitnamicharts/postgresql --set auth.postgresPassword=admin
+
+helm install vault hashicorp/vault \
+    --set "server.dev.enabled=true" \
+    --set "injector.enabled=false" \
+    --set "csi.enabled=true"
+
+
+helm install csi secrets-store-csi-driver/secrets-store-csi-driver \
+    --set syncSecret.enabled=true --set rotationPollInterval=30s \
+     --set secrets-store-csi-driver.enableSecretRotation=true --set enableSecretRotation=True
+
