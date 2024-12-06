@@ -1,8 +1,11 @@
+
+[Link da Apresentação](https://docs.google.com/presentation/d/1_iAoqxvkhfIbr3lNTG8QRVDxEJ2wivG1znHNzM7zkho/edit?usp=sharing).
+
 helm install my-release oci://registry-1.docker.io/bitnamicharts/postgresql --set auth.postgresPassword=admin
 
 # Nodeport
 
-psql  -h 172.19.0.2 -p30432 -U postgres postgres
+psql  -h 172.20.0.2 -p30432 -U postgres postgres
 
 
 export POSTGRES_PASSWORD=$(kubectl get secret --namespace default my-release-postgresql -o jsonpath="{.data.postgres-password}" | base64 -d)
@@ -108,7 +111,6 @@ metadata
   labels:
     app: webapp
 spec:
-  serviceAccountName: webapp-sa
   containers:
   - image: tanquetav/quarkusvault
     name: webapp
@@ -116,6 +118,7 @@ spec:
     - name: secrets-store-inline
       mountPath: "/mnt/secrets-store"
       readOnly: true
+  serviceAccountName: webapp-sa
   volumes:
     - name: secrets-store-inline
       csi:
